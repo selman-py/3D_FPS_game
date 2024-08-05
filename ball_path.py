@@ -13,7 +13,7 @@ class Ball(Entity):
     def update(self):
         self.position += self.direction * self.speed * time.dt 
         self.direction.y += -0.3 * time.dt
-        print(self.position)
+        # print(self.position)
 
         if self.position.y < -20:
             Ball.ball_list.remove(self)

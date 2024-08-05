@@ -2,17 +2,19 @@ from ursina import *
 
 class Ball(Entity):
     ball_list = []
-    def __init__(self, pos = Vec3(0), speed = 23, dir = Vec3(0)):
+    def __init__(self, pos = Vec3(0), speed = 23, dir = Vec3(0), rot=Vec3(0)):
         super().__init__(model='mermi', scale=0.2, position=pos, collider='sphere')
         self.direction = dir
         self.speed = speed
         Ball.ball_list.append(self)
+        self.rotation = rot
+        self.rotation_x = -10
         return
 
     def update(self):
         self.position += self.direction * self.speed * time.dt
         self.direction.y += -0.3 * time.dt
-        print(self.position)
+        # print(self.position)
 
         if self.position.y < -20:
             Ball.ball_list.remove(self)
