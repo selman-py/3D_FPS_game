@@ -66,7 +66,7 @@ app = Ursina(borderless=False)
 
 sky = CustomSky()
 
-ground = Entity(parent=scene, model="map2", scale=250, y=-20, texture="coast_sand_rocks_02_2k", texture_scale=(50, 50),
+ground = Entity(parent=scene, model="try_map", scale=250, y=-20, texture="coast_sand_rocks_02_2k", texture_scale=(50, 50),
                 collider='box')
 
 player = FirstPersonController(x=-10, y=24)
