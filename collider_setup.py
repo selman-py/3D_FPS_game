@@ -22,13 +22,23 @@ def create_entity_from_data(mesh_data, custom_scale):
     entity = Entity(
         name=mesh_data["name"],
         position=position * custom_scale,
+        y=1,
         rotation=rotation,
         scale=scale * custom_scale * 2,
-        model='plane',  # Placeholder model; you can customize this based on your needs
-        collider='box',  # Adding a box collider; customize as needed
+        model="plane",  # Placeholder model; you can customize this based on your needs
         double_sided=True,
-        color=color.red
+        color=color.clear
     )
+
+    if "Cube" in entity.name:
+        entity.model = "cube"
+        entity.collider = 'box'
+
+    elif "Plane" in entity.name:
+        entity.model = "plane"
+        entity.collider = 'box'
+
+
 
     colliders.append(entity)
     return entity
@@ -36,10 +46,9 @@ def create_entity_from_data(mesh_data, custom_scale):
 
 def setup_scene(json_file, custom_scale):
     meshes_data = load_meshes_from_json(json_file)
-
+    print(meshes_data)
     # Sort the list of dictionaries by the 'name' key
-    sorted_data = sorted(meshes_data, key=lambda x: int(x['name'][5:]))
-    print(sorted_data)
-    for mesh_data in sorted_data:
+    #sorted_data = sorted(meshes_data, key=lambda x: int(x['name'][5:]))
+    #print(sorted_data)
+    for mesh_data in meshes_data:
         create_entity_from_data(mesh_data, custom_scale)
-    Path(colliders)

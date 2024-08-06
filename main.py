@@ -41,7 +41,7 @@ class Enemy(Entity):
     def update(self):
         dist = distance_xz(self, player)
 
-        if dist < 2:
+        if dist < 20:
             print_on_screen("BUSTED")
             self.actor.play("attack")
         if dist > 50:
@@ -65,19 +65,47 @@ class Enemy(Entity):
         self.z -= 25
 
 
+class PhysicsEntity(Entity):
+    def __init__(self, model='bomba', collider='box', **kwargs):
+        super().__init__(model=model, collider=collider, **kwargs)
+        self.velocity = Vec3(0, 0, 0)
+
+    def update(self):
+        if self.intersects():
+            self.stop()
+            return
+
+        self.velocity = lerp(self.velocity, Vec3(0), time.dt)
+        self.velocity += Vec3(0, -1, 0) * time.dt * 5
+        self.position += (self.velocity + Vec3(0, -4, 0)) * time.dt
+
+    def stop(self):
+        self.velocity = Vec3(0, 0, 0)
+
+    def throw(self, direction, force):
+        self.velocity = direction * force
+
+
 def input(key):
     if key == 'left mouse down':
         dir = camera.forward + Vec3(0, 0.01, 0)
         pos = player.position + player.forward + Vec3(0, 1.6, 0)
         ball = Ball(pos=pos, speed=15, dir=dir, rot=player.rotation)
         ball.shader = bls
+    elif key == '3':
+        bomba_Shoot()
+
+
+def bomba_Shoot():
+    bomb = PhysicsEntity(model='bomba', scale=1, position=player.position + Vec3(0, 1.5, 0) + player.forward, collider='sphere')
+    bomb.throw(camera.forward + Vec3(0, 0.5, 0), 10)
 
 
 app = Ursina(borderless=False)
 
 sky = CustomSky()
 
-arena = Entity(model="map3", scale=350, y=-34.5)
+arena = Entity(model="map6", scale=350, y=-34.5) #harita14
 
 ground = Entity(model="plane", scale=300, y=0, texture="grass", color=color.lime)
 ground_box = Entity(model="plane", scale=300, y=-1.5, collider="box")
@@ -115,5 +143,9 @@ def shoot():
 
 
 enemies = [Enemy(x=x * 20, anim_speed=0.5, move_speed=0.1, collider_speed=0.05) for x in range(5)]  # Düşmanların animasyon, hareket ve collider hızlarını azaltmak için değerler eklendi
+
+setup_scene("assets\colliders.json", 350)
+
+#EditorCamera()
 
 app.run()
